@@ -1,0 +1,32 @@
+---
+description: Guidelines for working with vendored libraries
+globs:
+alwaysApply: true
+---
+
+# Vendored Libraries Guidelines
+
+## The `.cursor/libraries/` Directory
+
+The `.cursor/libraries/` directory contains cached Go dependencies that provide essential context for development:
+
+- **Purpose**: Contains copies of Go modules that your project depends on
+- **Structure**: Preserves the module path structure (e.g., `github.com/org/repo`)
+- **Git Status**: These are Git-ignored cached copies, not part of your project's version control
+- **Updates**: Use the `.cursor/update.sh` script to refresh these cached libraries if needed
+
+## Working with Vendored Libraries
+
+When developing Go code in this project:
+
+1. **Import Analysis**: Reference the vendored libraries to understand what functions, types, and constants are available from imported packages
+2. **Code Understanding**: Use the actual source code in these libraries to understand API contracts and usage patterns
+3. **Documentation**: The vendored libraries contain the actual source code and comments for better context
+4. **Version Awareness**: These libraries are cached at specific versions that may not reflect the absolute latest releases
+
+## Development Best Practices
+
+- Check the vendored libraries in `.cursor/libraries/` when working with external dependencies
+- Reference the actual function signatures and documentation from the vendored source code
+- Verify that packages exist in the vendored libraries before using them
+- Understand that these libraries represent the direct dependencies from go.mod, not transitive dependencies

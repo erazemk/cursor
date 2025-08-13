@@ -1,0 +1,126 @@
+---
+description: Use when writing code that's part of the github.com/devrev organization.
+globs:
+alwaysApply: false
+---
+
+## DevRev Shared Packages
+
+- Check if a similar function exists in the `github.com/devrev/shared` package before writing new helper functions
+- Use the log package from `github.com/devrev/shared` unless the project has its own logging wrapper, in which case use that one
+
+## Running code
+
+Most projects use Sidekick, an in-house-built Makefile-based tool that scripts the compilation and checking of the code.
+Check the `Makefile` if it exists to see which commands are available.
+For variables (e.g., `$(GO)`), check `Makefile.sidekick` to see their definitions and which commands are actually run.
+For checking your changes, run `make vet` to run the linter or `make unit-test` to run the unit tests.
+
+### Pointer Utilities
+
+- Use the `github.com/devrev/shared/ptr` package for operations involving pointers:
+
+  - For creating pointers to literal values, use the generic `ptr.New(value)` for supported types:
+
+    ```go
+    // Good: Using ptr.New for literal values
+    stringPtr := ptr.New("example")
+    intPtr := ptr.New(42)
+    ```
+
+  - If type conversion is required, use the type-specific functions:
+
+    ```go
+    // Good: Using type-specific function for conversion
+    // When you have an int but need *int64
+    int64Ptr := ptr.Int64Ptr(1)
+    ```
+
+  - For variables, use the & operator directly instead of the ptr package:
+
+    ```go
+    // Good: Using & operator for variables
+    var myVar string = "example"
+    myVarPtr := &myVar
+    ```
+
+  - For dereferencing pointers safely, use `ptr.Value`:
+
+    ```go
+    // Good: Using ptr.Value for type-safe dereferencing
+    value := ptr.Value(stringPtr)
+    ```
+
+  - For printing pointer values, use `ptr.Print`:
+    ```go
+    // Good: Using ptr.Print for printing pointer values
+    fmt.Println(ptr.Print(stringPtr))
+    ```
+
+### DON Conversions
+
+- When working with DevRev Object Notation (DON) IDs, use appropriate conversion functions:
+
+  - To convert from `donv2.DON` to `donv2.DONProto`:
+
+    ```go
+    // When a field expects a donv2.DONProto
+    donProto := donv2.ToDONProto(donValue)
+    ```
+
+  - To convert to `*proto.Id`:
+
+    ```go
+    // When a field expects a proto.Id
+    protoId := &proto.Id{Id: donValue.String()}
+    ```
+
+  - To convert from `donv2.DONProto` to `donv2.DON`:
+    ```go
+    // When you need to convert back to donv2.DON
+    don, err := donv2.FromDONProto(donProtoValue)
+    ```
+
+## Code Formatting and Style
+
+- For logically connected code, omit blank lines:
+
+  ```go
+  // Good: No blank line between function call and error check
+  err := someFunction()
+  if err != nil {
+      return err
+  }
+
+  // Good: No blank line between for loop and error check
+  for _, item := range items {
+      err := processItem(item)
+      if err != nil {
+          return err
+      }
+  }
+  ```
+
+- For unrelated code blocks, separate with a blank line for readability:
+
+  ```go
+  // Good: Blank line before return statement
+  result := calculateResult()
+
+  return result
+  ```
+
+- Write if statements with function calls on separate lines:
+
+  ```go
+  // Good: Function call and if check on separate lines
+  err := someFunction()
+  if err != nil {
+      return err
+  }
+
+  // Avoid: Function call inside if statement
+  // if err := someFunction(); err != nil {
+  //     return err
+  // }
+  ```

@@ -1,0 +1,47 @@
+---
+description: Go language best practices and conventions for AI assistants
+globs: *.go
+alwaysApply: false
+---
+
+# Go Development Guidelines
+
+## Follow Go Conventions and Standards
+
+- Adhere to official Go documentation and established best practices from https://go.dev/doc
+- Use standard Go idioms and patterns consistently throughout the codebase
+- Follow Go naming conventions: use camelCase for variables/functions, PascalCase for exported items
+- Organize code using standard Go project layout and package structure
+- Use gofmt/goimports for consistent code formatting
+
+## Implement Proper Error Handling
+
+- Always handle errors explicitly - never ignore returned errors
+- Use Go's idiomatic error handling pattern: `if err != nil { return err }`
+- Return errors as the last value in multiple return statements
+- Wrap errors with context using `fmt.Errorf("context: %w", err)` when appropriate
+- Create custom error types for domain-specific errors when needed
+
+## Write Effective Go Code
+
+- Use short, descriptive variable names (prefer `i` over `index` in loops, `ctx` over `context`)
+- Declare variables close to where they are used
+- Use zero values when possible instead of explicit initialization
+- Prefer composition over inheritance using embedded structs and interfaces
+- Use channels and goroutines appropriately for concurrent programming
+- Implement the `String()` method for types that need custom string representation
+
+## Code Verification and Testing
+
+- Run `go vet` or `make vet` after code changes to check for common errors
+- Run tests using full package paths: `go test github.com/your/module/package`
+- Write table-driven tests for multiple test cases
+- Use testify/assert for cleaner test assertions when available
+- Mock external dependencies using interfaces for better testability
+
+## Dependency Management
+
+- Run `go mod tidy` after adding, removing, or updating imports
+- Use `go mod vendor` if the project requires vendored dependencies
+- Import packages using their full import path
+- Group imports into standard library, third-party, and local packages with blank lines between groups

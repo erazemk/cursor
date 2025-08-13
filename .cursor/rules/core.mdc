@@ -1,0 +1,69 @@
+---
+description: Core development guidelines for AI assistants
+globs:
+alwaysApply: true
+---
+
+# Core Development Guidelines
+
+## Write Clear, Readable Code
+
+- Prioritize code readability over clever or complex solutions
+- Decompose complex functions into smaller, focused functions with clear purposes
+- Use descriptive variable and function names that explain their purpose
+- Structure code logically with consistent indentation and formatting
+
+## Handle Errors Properly
+
+- Implement comprehensive error handling for all functions
+- Account for edge cases, invalid inputs, and potential failure scenarios  
+- Return meaningful error messages that help diagnose issues
+- Use appropriate error types and handling patterns for the language
+
+## Use Comments and Documentation Wisely
+
+- Avoid commenting simple or self-explanatory code
+- Write comments only for complex logic that requires explanation
+- Use clear, concise language in all documentation
+- Prefer self-documenting code through good naming conventions
+- Document function purposes, parameters, and return values when helpful
+
+## Consider Code Impact and Dependencies
+
+- Analyze how changes affect other parts of the codebase
+- Search for and update all functions that call modified functions
+- Evaluate alternative implementation approaches and their trade-offs
+- Ensure new code aligns with existing project architecture and patterns
+- Identify and minimize potential side effects from changes
+
+## Make Multi-File Changes When Necessary
+
+- Modify multiple files when changes require updates across components
+- Maintain consistency in related code across different files
+- Update all references when renaming functions, variables, or files
+- Ensure interface changes are reflected in all implementing code
+
+## Follow Style and Quality Standards
+
+- Fix any linter warnings or LSP errors in generated code
+- Adhere to project-specific formatting and style guidelines
+- Use consistent naming conventions throughout the codebase
+- Follow language-specific best practices and idioms
+
+## Maintain Project Documentation
+
+- Read CLAUDE.md files when present to understand project context
+- Update CLAUDE.md when making changes that affect documented processes
+- Keep documentation synchronized with code changes
+
+## Organize Documentation Systematically
+
+- Store all project documentation in a `docs/` directory at the project root
+- Create the `docs/` directory if it doesn't already exist
+- Name documentation files using kebab-case with `.md` extensions (e.g., `api-reference.md`)
+- Focus each documentation file on a single technical topic
+- Maintain a `docs/README.md` file that indexes all documentation
+- Write one sentence per line in Markdown files for better version control
+- Use Mermaid diagrams for architectural and flow documentation
+- Update `docs/README.md` when adding new documentation files
+- Update documentation references when moving or renaming files
