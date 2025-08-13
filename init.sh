@@ -9,7 +9,16 @@ DEBUG=false
 SYNC_RULES=true
 FORCE=false
 
-CURSOR_DIR=".cursor"
+# Detect if running from .cursor directory and adjust working directory
+if [ "$(basename "$PWD")" = ".cursor" ]; then
+    # Running from within .cursor directory - change to project root
+    cd ..
+    CURSOR_DIR=".cursor"
+else
+    # Running from project root
+    CURSOR_DIR=".cursor"
+fi
+
 RULES_DIR="$CURSOR_DIR/rules"
 LIBRARIES_DIR="$CURSOR_DIR/libraries"
 
@@ -64,11 +73,13 @@ clone_template_repo() {
 }
 
 copy_helper_files() {
+    info "Copying helper files to $CURSOR_DIR..."
     mkdir -p "$CURSOR_DIR" || error "Failed to create the $CURSOR_DIR directory"
     find "$TEMP_DIR/.cursor" -maxdepth 1 -type f -exec cp -f {} "$CURSOR_DIR"/ \; || error "Failed to copy files into $CURSOR_DIR/"
 }
 
 copy_rules() {
+    info "Copying Cursor rules to $RULES_DIR..."
     mkdir -p "$RULES_DIR" || error "Failed to create the $RULES_DIR directory"
 
     cpcmd="cp -r"
@@ -81,8 +92,8 @@ copy_rules() {
 }
 
 vendor_libraries() {
+    info "Vendoring Go libraries to $LIBRARIES_DIR..."
     command -v go >/dev/null 2>&1 || error "Go is not installed, can't vendor Go libraries"
-    info "Vendoring Go libraries..."
 
     rm -rf "$LIBRARIES_DIR" || error "Failed to remove all files in $LIBRARIES_DIR"
     mkdir -p "$LIBRARIES_DIR" || error "Failed to create $LIBRARIES_DIR"
@@ -99,11 +110,11 @@ vendor_libraries() {
             cp -rf "$dependency_path" "$target_path" || error "Failed to copy $dependency to $LIBRARIES_DIR"
         fi
     done
-
-    info "Vendored Go libraries to $LIBRARIES_DIR"
 }
 
 update_ignore_files() {
+    info "Updating .gitignore and .cursorignore..."
+
     # Don't track the libraries directory in git
     if [ -f .gitignore ]; then
         if ! grep -qF "$LIBRARIES_DIR" .gitignore; then
@@ -115,7 +126,7 @@ update_ignore_files() {
 
     # But Cursor should index it
     if [ -f .cursorignore ]; then
-        if ! grep -qF "!$LIBRARIES_DIR" .cursorignore; then
+        if ! grep -qF "!$LIBRARIES_DIR" .cursorignore && ! grep -qF "$CURSOR_DIR" .cursorignore; then
             echo "!$LIBRARIES_DIR" >> .cursorignore || error "Failed to update .cursorignore"
         fi
     else
